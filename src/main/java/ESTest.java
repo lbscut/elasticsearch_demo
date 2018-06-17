@@ -21,6 +21,7 @@ import org.elasticsearch.index.query.QueryBuilders;
 import org.elasticsearch.index.query.RangeQueryBuilder;
 import org.elasticsearch.search.SearchHit;
 import org.elasticsearch.search.SearchHits;
+import org.elasticsearch.search.sort.SortOrder;
 import org.elasticsearch.transport.client.PreBuiltTransportClient;
 
 import com.alibaba.fastjson.JSONObject;
@@ -87,6 +88,15 @@ public class ESTest {
     	QueryBuilder queryBuilder = QueryBuilders.matchQuery("title", keyword);
     	System.out.println("search title:" + keyword);
 		searchTrack(queryBuilder);
+    }
+
+    //获取最新的歌曲
+    public static void searchNewestTrack(int count) {
+    	SearchResponse response = transportClient.prepareSearch(INDEX_NAME).addSort("time", SortOrder.DESC).setSize(count).execute().actionGet();
+		SearchHits hits = response.getHits();
+		for (SearchHit searchHit : hits) {
+			System.out.println(searchHit.getSourceAsString());
+		}
     }
     
     //短语匹配作者
@@ -195,16 +205,17 @@ public class ESTest {
     
     public static void main(String[] args) {
 		init();
-		ingest();//导入数据到索引，刚导入需要稍等一会才能搜到，因为es是近乎实时的。
-		searchTrackByTitle("听儿歌");//模糊搜索不确定的关键字,只搜标题
-		searchTrackByAuthor("疯狂英语");//搜索已知的短语，短语不可被拆开
-		searchTrackByAll("英语");//模糊搜索不确定的关键字，搜所有字段
-		searchTrackWithoutComment();//精确搜索评论为0的歌曲
-		searchTrackWithMoreComment(10);//搜索评论数多于10的歌曲
-		searchTrackByTitleAndAuthor("两只老虎", "宝宝巴士");
-		searchTrackWithTime("2018-01-01 00:00:00");
-		deleteTrack("1");
-		deleteIndex();
+//		ingest();//导入数据到索引，刚导入需要稍等一会才能搜到，因为es是近乎实时的。
+//		searchTrackByTitle("听儿歌");//模糊搜索不确定的关键字,只搜标题
+//		searchTrackByAuthor("疯狂英语");//搜索已知的短语，短语不可被拆开
+//		searchTrackByAll("英语");//模糊搜索不确定的关键字，搜所有字段
+//		searchTrackWithoutComment();//精确搜索评论为0的歌曲
+//		searchTrackWithMoreComment(10);//搜索评论数多于10的歌曲
+//		searchTrackByTitleAndAuthor("两只老虎", "宝宝巴士");
+//		searchTrackWithTime("2018-01-01 00:00:00");
+		searchNewestTrack(5);
+//		deleteTrack("1");
+//		deleteIndex();
 		
 	}
 
