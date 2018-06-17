@@ -1,0 +1,28 @@
+{
+	"properties": {
+	  "id": {
+	    "type": "long"
+	  },
+	  "title": {
+	    "type": "text",
+	    "analyzer":"ik_max_word"
+	  },
+	  "author": {
+	    "type": "text",
+	    "analyzer":"ik_max_word"
+	  },
+	  "comment": {
+	    "type": "long"
+	  },
+	  "listen": {
+	    "type": "long"
+	  },
+	  "duration": {
+	    "type": "keyword"
+	  },
+	  "time": {
+	    "type": "date",
+	    "format": "yyyy-MM-dd HH:mm:ss"
+	  }
+	}
+}
